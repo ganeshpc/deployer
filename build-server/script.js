@@ -5,7 +5,7 @@ const fs = require('fs');
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 const mime = require('mime-types');
 
-const s3Client = S3Client({
+const s3Client = new S3Client({
   region: 'ap-south-1',
   credentials: {
     accessKeyId: 'AKIA2FMJCPZUTEUJ3KWV',
@@ -37,16 +37,17 @@ async function init() {
 
     const distDirContent = fs.readdirSync(distDir, { recursive: true });
 
-    for (const filePath of distDirContent) {
+    for (const file of distDirContent) {
+      const filePath = path.join(distDir, file);
       if (fs.lstatSync(filePath).isDirectory()) continue;
 
       console.log('uploading...', filePath);
 
       const command = new PutObjectCommand({
-        Bucket: 'vercel-clone-output',
-        Key: `__output/${PROJECT_ID}/${filePath}`,
+        Bucket: 'vercel-bucket-output',
+        Key: `__output/${PROJECT_ID}/${file}`,
         Body: fs.createReadStream(filePath),
-        ContentType: mime(filePath),
+        ContentType: mime.lookup(filePath),
       });
 
       await s3Client.send(command);
@@ -56,3 +57,5 @@ async function init() {
     console.log('done...');
   });
 }
+
+init();

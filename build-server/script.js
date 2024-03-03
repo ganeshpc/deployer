@@ -19,6 +19,7 @@ const s3Client = new S3Client({
 });
 
 const PROJECT_ID = process.env.PROJECT_ID;
+const DEPLOYMENT_ID = process.env.DEPLOYMENT_ID;
 
 const publishLog = (log) => {
   publisher.publish(`logs:${PROJECT_ID}`, JSON.stringify({ log }));

@@ -40,7 +40,7 @@ export const deployProject = async (projectId: string) => {
     },
   });
 
-  await aws.buildProject(project.id, project.gitUrl);
+  await aws.buildProject(project.id, project.gitUrl, deployment.id);
 
   return deployment;
 };

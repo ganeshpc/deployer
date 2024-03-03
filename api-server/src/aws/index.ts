@@ -13,7 +13,11 @@ const ecsClient = new ECSClient({
   },
 });
 
-export const buildProject = async (projectId: string, gitRepoUrl: string) => {
+export const buildProject = async (
+  projectId: string,
+  gitRepoUrl: string,
+  deploymentId: string
+) => {
   const command = new RunTaskCommand({
     cluster: awsConfig.CLUSTER,
     taskDefinition: awsConfig.TASK,
@@ -38,6 +42,10 @@ export const buildProject = async (projectId: string, gitRepoUrl: string) => {
             {
               name: 'GIT_REPOSITORY__URL',
               value: gitRepoUrl,
+            },
+            {
+              name: 'DEPLOYMENT_ID',
+              value: deploymentId,
             },
           ],
         },

@@ -71,6 +71,10 @@ async function init() {
     console.log('done...');
 
     publishLog('build complete');
+
+    publisher.quit();
+
+    process.exit(0);
   });
 }
 

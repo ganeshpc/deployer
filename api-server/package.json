@@ -21,6 +21,7 @@
     "express-validator": "^7.0.1",
     "helmet": "^7.1.0",
     "install": "^0.13.0",
+    "kafkajs": "^2.2.4",
     "npm": "^10.5.0",
     "random-word-slugs": "^0.1.7",
     "socket.io": "^4.7.4"

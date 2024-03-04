@@ -7,6 +7,9 @@ dotenv.config();
 
 import { initializeRedis } from './redis';
 import * as validators from './routes/validators';
+
+// routers
+import userRouter from './routes/user';
 import projectRouter from './routes/project';
 
 initializeRedis();
@@ -25,6 +28,8 @@ app.get('/health', (req, res) => {
     status: 'ok',
   });
 });
+
+app.use('/user', userRouter);
 
 app.use('/project', projectRouter);
 

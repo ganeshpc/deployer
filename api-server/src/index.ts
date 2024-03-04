@@ -1,57 +1,23 @@
-import express, { Request, Response, NextFunction } from 'express';
-import { ValidationError } from 'express-validator';
-import helmet from 'helmet';
-
 import dotenv from 'dotenv';
 dotenv.config();
 
-import * as validators from './routes/validators';
+import app from './app';
+import { initKafka } from './kafka';
 
-// routers
-import userRouter from './routes/user';
-import projectRouter from './routes/project';
 
 const PORT = process.env.PORT ?? 9002;
 
-const app = express();
+const main = async () => {
+  try {
+    await initKafka();
 
-// helmet middleware for security
-app.use(helmet());
-
-app.use(express.json());
-
-app.get('/health', (req, res) => {
-  return res.json({
-    status: 'ok',
-  });
-});
-
-app.use('/user', userRouter);
-
-app.use('/project', projectRouter);
-
-// validation error handler
-app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
-  if (error instanceof validators.ValidationErrors) {
-    return res.status(400).json({
-      status: 'error',
-      errors: error.errors.map((error: ValidationError) => ({
-        message: error.msg,
-      })),
+    app.listen(PORT, () => {
+      console.log(`api server listening on port: ${PORT}`);
     });
+  } catch (error) {
+    console.error('error starting server', error);
+    process.exit(1);
   }
+};
 
-  next(error);
-});
-
-// final error handler
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.log('final error handler', err);
-  return res.status(500).json({
-    message: 'Internal server error',
-  });
-});
-
-app.listen(PORT, () => {
-  console.log(`api server listening on port: ${PORT}`);
-});
+main();

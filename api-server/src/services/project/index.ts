@@ -1,7 +1,7 @@
 import { DeploymentStatus } from '@prisma/client';
 
 import * as aws from '../../aws';
-import { prisma } from '../prisma';
+import { prisma } from '../../prisma';
 
 export const createProject = async (
   name: string,

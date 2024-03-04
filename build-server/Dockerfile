@@ -18,6 +18,8 @@ COPY package*.json .
 
 RUN npm install
 
+COPY ca-certificate.crt ca-certificate.crt
+
 COPY main.sh main.sh
 
 COPY script.js script.js

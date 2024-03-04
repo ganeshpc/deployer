@@ -1,11 +1,26 @@
 const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
-const Redis = require('ioredis');
+const { Kafka } = require('kafkajs');
 
-const publisher = new Redis(
-  'rediss://default:AVNS_WGvAmK0zHF-EdxNZUXj@redis-1e9a5741-vercel-clone-proj.a.aivencloud.com:18238'
-);
+const PROJECT_ID = process.env.PROJECT_ID;
+const DEPLOYMENT_ID = process.env.DEPLOYMENT_ID;
+
+const kafka = new Kafka({
+  clientId: `build-server-${DEPLOYMENT_ID}`,
+  brokers: [
+    'db-kafka-blr1-77912-do-user-15981714-0.c.db.ondigitalocean.com:25073',
+  ],
+  sasl: {
+    username: 'doadmin',
+    password: 'AVNS_mLZ_u6GTIqomZVnuX3j',
+  },
+  ssl: {
+    ca: fs.readFileSync('./ca-certificate.crt', 'utf-8'),
+  },
+});
+
+const proudcer = kafka.producer();
 
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 const mime = require('mime-types');
@@ -18,14 +33,18 @@ const s3Client = new S3Client({
   },
 });
 
-const PROJECT_ID = process.env.PROJECT_ID;
-const DEPLOYMENT_ID = process.env.DEPLOYMENT_ID;
-
-const publishLog = (log) => {
-  publisher.publish(`logs:${PROJECT_ID}`, JSON.stringify({ log }));
+const publishLog = async (log) => {
+  await proudcer.send({
+    topic: 'container-logs',
+    messages: [
+      { key: 'log', value: JSON.stringify({ PROJECT_ID, DEPLOYMENT_ID, log }) },
+    ],
+  });
 };
 
 async function init() {
+  await proudcer.connect();
+
   console.log('Executing script.js');
   publishLog('build started...');
 

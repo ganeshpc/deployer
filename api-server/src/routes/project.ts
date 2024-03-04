@@ -3,7 +3,7 @@ import { validationResult } from 'express-validator';
 import { generateSlug } from 'random-word-slugs';
 
 import { createProject, deployProject } from '../services/project';
-import * as validators from '../validators';
+import * as validators from './validators';
 
 const projectRouter = express.Router();
 

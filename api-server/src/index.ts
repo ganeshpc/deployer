@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { initializeRedis } from './redis';
-import * as validators from './validators';
+import * as validators from './routes/validators';
 import projectRouter from './routes/project';
 
 initializeRedis();

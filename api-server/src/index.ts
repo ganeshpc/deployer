@@ -1,20 +1,22 @@
 import express, { Request, Response, NextFunction } from 'express';
-
-import { ValidationError, validationResult } from 'express-validator';
-import { generateSlug } from 'random-word-slugs';
+import { ValidationError } from 'express-validator';
+import helmet from 'helmet';
 
 import dotenv from 'dotenv';
 dotenv.config();
 
 import { initializeRedis } from './redis';
-import { createProject, deployProject } from './services/project';
 import * as validators from './validators';
+import projectRouter from './routes/project';
 
 initializeRedis();
 
-const PORT = process.env.PORT || 9000;
+const PORT = process.env.PORT ?? 9002;
 
 const app = express();
+
+// helmet middleware for security
+app.use(helmet());
 
 app.use(express.json());
 
@@ -24,52 +26,7 @@ app.get('/health', (req, res) => {
   });
 });
 
-app.post(
-  '/project',
-  validators.createProjectValidators,
-  async (req: Request, res: Response, next: NextFunction) => {
-    const validationErrors = validationResult(req);
-
-    if (!validationErrors.isEmpty()) {
-      return next(new validators.ValidationErrors(validationErrors));
-    }
-
-    const { name, gitUrl, customDomain } = req.body;
-
-    const subdomain = generateSlug();
-
-    const project = await createProject(name, gitUrl, subdomain, customDomain);
-
-    res.json({ status: 'success', project });
-  }
-);
-
-app.post(
-  '/deploy',
-  validators.deployProjectValidators,
-  async (req: Request, res: Response, next: NextFunction) => {
-    const validationErrors = validationResult(req);
-
-    if (!validationErrors.isEmpty()) {
-      return next(new validators.ValidationErrors(validationErrors));
-    }
-
-    try {
-      const { projectId } = req.body;
-
-      const deployment = await deployProject(projectId);
-
-      return res.json({
-        status: 'success',
-        deployment,
-      });
-    } catch (error) {
-      console.log('deploy error', error);
-
-      return next(error);
-    }
-  }
-);
+app.use('/project', projectRouter);
 
 // validation error handler
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {

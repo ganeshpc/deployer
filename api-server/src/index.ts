@@ -5,14 +5,11 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { initializeRedis } from './redis';
 import * as validators from './routes/validators';
 
 // routers
 import userRouter from './routes/user';
 import projectRouter from './routes/project';
-
-initializeRedis();
 
 const PORT = process.env.PORT ?? 9002;
 

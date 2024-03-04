@@ -13,6 +13,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("user")
+}
+
 enum DeploymentStatus {
   NOT_STARTED
   QUEUED
@@ -22,8 +34,6 @@ enum DeploymentStatus {
 }
 
 model Project {
-  @@map("project")
-
   id           String       @id @default(uuid())
   name         String
   gitUrl       String       @map("git_url")
@@ -33,18 +43,18 @@ model Project {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("project")
 }
 
 model Deployment {
-  @@map("deployment")
-
-  id        String  @id @default(uuid())
-  project   Project @relation(fields: [projectId], references: [id])
-  projectId String @map("project_id")
+  id        String           @id @default(uuid())
+  project   Project          @relation(fields: [projectId], references: [id])
+  projectId String           @map("project_id")
   status    DeploymentStatus @default(NOT_STARTED)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("deployment")
 }
-
-

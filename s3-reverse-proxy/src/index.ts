@@ -32,3 +32,18 @@ proxy.on('proxyReq', (proxyReq, req, res) => {
 app.listen(PORT, () => {
   console.log(`Reverse proxy listening on port: ${PORT}`);
 });
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received');
+  process.exit(0);
+});
+
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received');
+  process.exit(0);
+});
+
+process.on('SIGHUP', () => {
+  console.log('SIGHUP received');
+  process.exit(0);
+});

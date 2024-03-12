@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
+import logger from '../logger/winston.config';
 import { Kafka } from 'kafkajs';
 
 const broker = process.env.KAFKA_BROKER as string;
@@ -27,5 +28,5 @@ export const initKafka = async () => {
   await consumer.connect();
   await consumer.subscribe({ topics: ['container-logs'] });
 
-  console.log('kafka connection successful');
+  logger.info('kafka connection successful');
 };

@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+import logger from './logger/winston.config';
 import app from './app';
 import { initKafka } from './kafka';
-
 
 const PORT = process.env.PORT ?? 9002;
 
@@ -12,10 +12,10 @@ const main = async () => {
     await initKafka();
 
     app.listen(PORT, () => {
-      console.log(`api server listening on port: ${PORT}`);
+      logger.info(`api server listening on port: ${PORT}`);
     });
   } catch (error) {
-    console.error('error starting server', error);
+    logger.error('error starting server', error);
     process.exit(1);
   }
 };

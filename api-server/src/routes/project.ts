@@ -40,6 +40,7 @@ projectRouter.post(
     try {
       const { projectId } = req.body;
 
+      // create project and start deployment
       const deployment = await deployProject(projectId);
 
       return res.json({

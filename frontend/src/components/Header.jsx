@@ -1,9 +1,9 @@
+import { NavLink } from 'react-router-dom';
+
+import logoUrl from '../assets/deployer-logo.svg';
+
 const Header = () => {
-  return (
-    <div className="bg-indigo-600">
-    <h1 className="text-3xl font-bold underline">Header</h1>
-</div>
-  );
+  return <header></header>;
 };
 
 export default Header;

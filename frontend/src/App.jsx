@@ -1,11 +1,13 @@
-import CreateProject from './components/CreateProject';
-import Header from './components/Header';
+import { RouterProvider } from 'react-router-dom';
+
+import router from './routes';
+import Header from './components/Header'
 
 const App = () => {
   return (
     <div>
-      <Header></Header>
-      <CreateProject />
+      <Header/>
+      <RouterProvider router={router} />
     </div>
   );
 };

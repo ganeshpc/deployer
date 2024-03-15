@@ -1,11 +1,7 @@
-import logoUrl from '../assets/deployer-logo.svg'
+import logoUrl from '../assets/logo-no-background.png';
 
 const Logo = () => {
-  return (
-    <div>
-      <img src={logoUrl} alt="logo" />
-    </div>
-  );
+  return <img src={logoUrl} style={{ width: '120px' }} alt="Logo" />;
 };
 
 export default Logo;

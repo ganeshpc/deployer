@@ -4,6 +4,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { brown, grey } from '@mui/material/colors';
 
 import router from './routes';
+import { JWTProvider as AuthProvider } from './contexts/JWTContext';
 
 const theme = createTheme({
   palette: {
@@ -19,7 +20,9 @@ const theme = createTheme({
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <RouterProvider router={router} />;
+      <AuthProvider>
+        <RouterProvider router={router} />;
+      </AuthProvider>
     </ThemeProvider>
   );
 };

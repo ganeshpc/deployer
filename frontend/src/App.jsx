@@ -8,7 +8,7 @@ import router from './routes';
 const theme = createTheme({
   palette: {
     primary: {
-      main: grey[800],
+      main: grey[900],
     },
     secondary: {
       main: brown[800],

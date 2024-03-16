@@ -8,7 +8,8 @@ const Layout = () => {
   return (
     <>
       <Header />
-      <Container>
+      <div style={{height: '100px'}}></div>
+      <Container maxWidth='sm'>
         <Outlet />
       </Container>
     </>

@@ -1,12 +1,26 @@
-import { Button, Grid, TextField } from '@mui/material';
+import { Box, Button, Card, Grid, Stack, TextField } from '@mui/material';
 
 const CreateProject = () => {
   return (
-    <Grid container flexDirection="column" spacing={2} width={'600px'}>
-      <TextField variant="outlined" label="Project Name"></TextField>
-      <TextField variant="outlined" label="Gir Url"></TextField>
-      <Button variant="contained">Create Project</Button>
-    </Grid>
+    <Card sx={{ width: '400px', padding: '20px' }}>
+      <Stack spacing={2}>
+        <TextField
+          margin="4px"
+          variant="outlined"
+          label="Project Name"
+          size="small"
+        ></TextField>
+        <TextField
+          margin="4px"
+          variant="outlined"
+          label="Git Url"
+          size="small"
+        ></TextField>
+        <Button margin="4px" variant="contained">
+          Create Project
+        </Button>
+      </Stack>
+    </Card>
   );
 };
 

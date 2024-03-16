@@ -1,23 +1,55 @@
+import { useFormik } from 'formik';
+import * as yup from 'yup';
+
 import { Button, Card, Stack, TextField, Typography } from '@mui/material';
 
+const validationSchema = yup.object({
+  email: yup
+    .string('Enter your email')
+    .email('Enter a valid email')
+    .required('Email is required'),
+  password: yup.string('Enter your password').required('Password is required'),
+});
+
 const Login = () => {
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      alert(JSON.stringify(values));
+    },
+  });
+
   return (
     <Card sx={{ width: '400px', padding: '20px' }}>
       <Stack spacing={2}>
         <Typography variant="h4">Login</Typography>
         <TextField
-          margin="4px"
+          name="email"
+          onChange={formik.handleChange}
+          value={formik.values.email}
+          type="email"
           variant="outlined"
-          label="Email or Username"
+          label="Email"
           size="small"
+          error={formik.touched.email && Boolean(formik.errors.email)}
+          helperText={formik.touched.email && formik.errors.email}
         />
         <TextField
-          margin="4px"
+          name="password"
+          onChange={formik.handleChange}
+          value={formik.values.password}
+          type="password"
           variant="outlined"
           label="Password"
           size="small"
+          error={formik.touched.password && Boolean(formik.errors.password)}
+          helperText={formik.touched.password && formik.errors.password}
         />
-        <Button margin="4px" variant="contained">
+        <Button variant="contained" onClick={formik.handleSubmit}>
           Login
         </Button>
       </Stack>

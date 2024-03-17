@@ -1,6 +1,7 @@
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { Button, Card, Stack, TextField, Typography } from '@mui/material';
+import useProject from '../hooks/useProject';
 
 const validationSchema = yup.object({
   projectName: yup
@@ -10,6 +11,8 @@ const validationSchema = yup.object({
 });
 
 const CreateProject = () => {
+  const projectContext = useProject();
+
   const formik = useFormik({
     initialValues: {
       projectName: '',
@@ -17,7 +20,10 @@ const CreateProject = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values));
+      projectContext.createProject({
+        name: values.projectName,
+        gitUrl: values.gitUrl,
+      });
     },
   });
 

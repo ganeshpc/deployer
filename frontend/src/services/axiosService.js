@@ -6,9 +6,9 @@ const axiosService = axios.create({
 
 axiosService.interceptors.request.use(
   async (config) => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (accessToken) {
-      config.headers['Authorization'] = `Bearer ${accessToken}`;
+    const authToken = localStorage.getItem('authToken');
+    if (authToken) {
+      config.headers['Authorization'] = `Bearer ${authToken}`;
     }
     return config;
   },

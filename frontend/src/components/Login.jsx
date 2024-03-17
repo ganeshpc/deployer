@@ -2,6 +2,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 import { Button, Card, Stack, TextField, Typography } from '@mui/material';
+import useAuth from '../hooks/useAuth';
 
 const validationSchema = yup.object({
   email: yup
@@ -12,6 +13,8 @@ const validationSchema = yup.object({
 });
 
 const Login = () => {
+  const userContext = useAuth();
+
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -19,7 +22,7 @@ const Login = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values));
+      userContext.login(values.email, values.password);
     },
   });
 

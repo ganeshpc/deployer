@@ -1,6 +1,6 @@
 import { createContext, useReducer } from 'react';
 
-import authReducer, { initialState } from './auth-reducer/auth';
+import authReducer, { initialState } from './auth-reducer/reducer';
 
 const JWTContext = createContext(null);
 

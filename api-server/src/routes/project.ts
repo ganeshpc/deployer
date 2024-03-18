@@ -23,7 +23,7 @@ projectRouter.post(
 
     const project = await createProject(name, gitUrl, subdomain, customDomain);
 
-    res.json({ status: 'success', project });
+    res.json(project);
   }
 );
 
@@ -43,10 +43,7 @@ projectRouter.post(
       // create project and start deployment
       const deployment = await deployProject(projectId);
 
-      return res.json({
-        status: 'success',
-        deployment,
-      });
+      return res.json(deployment);
     } catch (error) {
       console.log('deploy error', error);
 

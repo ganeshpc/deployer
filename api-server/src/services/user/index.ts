@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 
 import { prisma } from '../../prisma';
 import InvalidCredentialsError from './InvalidCredentialsError';
+import { generateJwtToken } from './jwt';
 
 export const createUser = async (
   name: string,
@@ -40,5 +41,19 @@ export const login = async (email: string, password: string) => {
     throw new InvalidCredentialsError();
   }
 
-  return user;
+  const authToken = generateJwtToken({
+    name: user.name,
+    email: user.email,
+    username: user.username,
+    id: user.id,
+  });
+
+  const logedInUser = {
+    name: user.name,
+    email: user.email,
+    username: user.username,
+    authToken,
+  };
+
+  return logedInUser;
 };

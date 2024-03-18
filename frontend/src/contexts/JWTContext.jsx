@@ -44,7 +44,7 @@ export const JWTProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const user = userService.login(email, password);
+    const user = await userService.login(email, password);
 
     const authToken = user.authToken;
 
@@ -63,10 +63,10 @@ export const JWTProvider = ({ children }) => {
     dispatch({ type: 'LOGOUT' });
   };
 
-  const signUp = (user) => {
-    // Make a POST request to the server
-    // If the request is successful, dispatch the user object to the reducer
-    // If the request is unsuccessful, dispatch an error message to the reducer
+  const signUp = async (user) => {
+    const createdUser = await userService.signUp(user);
+
+    return createdUser;
   };
 
   return (

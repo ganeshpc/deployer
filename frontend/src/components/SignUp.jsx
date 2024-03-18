@@ -2,6 +2,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 import { Button, Card, Stack, TextField, Typography } from '@mui/material';
+import useAuth from '../hooks/useAuth';
 
 const validationSchema = yup.object({
   name: yup.string('Enter your name').required('Name is required'),
@@ -11,19 +12,32 @@ const validationSchema = yup.object({
     .required('Email is required'),
   username: yup.string('Enter your username').required('Username is required'),
   password: yup.string('Enter your password').required('Password is required'),
+  confirmPassword: yup
+    .string('Enter your password')
+    .required('Password is required')
+    .equals([yup.ref('password')], 'Passwords must match'),
 });
 
 const SignUp = () => {
+  const userContext = useAuth();
+
   const formik = useFormik({
     initialValues: {
       name: '',
       email: '',
       username: '',
       password: '',
+      confirmPassword: '',
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values));
+      const userData = {
+        name: values.name,
+        email: values.email,
+        username: values.username,
+        password: values.password,
+      };
+      userContext.signUp(userData);
     },
   });
 
@@ -71,6 +85,22 @@ const SignUp = () => {
           size="small"
           error={formik.touched.password && Boolean(formik.errors.password)}
           helperText={formik.touched.password && formik.errors.password}
+        />
+        <TextField
+          name="confirmPassword"
+          onChange={formik.handleChange}
+          value={formik.values.confirmPassword}
+          type="password"
+          variant="outlined"
+          label="Confirm Password"
+          size="small"
+          error={
+            formik.touched.confirmPassword &&
+            Boolean(formik.errors.confirmPassword)
+          }
+          helperText={
+            formik.touched.confirmPassword && formik.errors.confirmPassword
+          }
         />
         <Button variant="contained" onClick={formik.handleSubmit}>
           Sign Up

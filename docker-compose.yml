@@ -1,0 +1,15 @@
+version: '1'
+
+services:
+  api-server:
+    build: 
+      context: './api-server'
+      dockerfile: "Dockerfile.development"
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./api-server:/workdir/app
+      - /workdir/app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run start:dev

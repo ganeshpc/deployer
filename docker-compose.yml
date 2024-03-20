@@ -1,10 +1,9 @@
-version: '1'
-
 services:
   api-server:
     build: 
-      context: './api-server'
-      dockerfile: "Dockerfile.development"
+      context: ./api-server
+      dockerfile: Dockerfile
+      target: base
     ports:
       - "9000:9000"
     volumes:
@@ -12,4 +11,18 @@ services:
       - /workdir/app/node_modules
     environment:
       - NODE_ENV=development
-    command: npm run start:dev
+    command: sh -c "npm install && npm run start:dev"
+
+  fronted:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: base
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/workdir/app
+      - /workdir/app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: sh -c "npm install && npm run dev"

@@ -2,8 +2,10 @@ import express, { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
 import { generateSlug } from 'random-word-slugs';
 
+import logger from '../logger/winston.config';
 import { createProject, deployProject } from '../services/project';
 import * as validators from './validators';
+import ProjectError from '../services/project/ProjectError';
 
 const projectRouter = express.Router();
 
@@ -45,10 +47,20 @@ projectRouter.post(
 
       return res.json(deployment);
     } catch (error) {
-      console.log('deploy error', error);
+      logger.error('deploy error', error);
 
       return next(error);
     }
+  }
+);
+
+projectRouter.use(
+  (error: Error, req: Request, res: Response, next: NextFunction) => {
+    if (error instanceof ProjectError) {
+      return res.status(400).json({ status: 'error', message: error.message });
+    }
+
+    next(error);
   }
 );
 

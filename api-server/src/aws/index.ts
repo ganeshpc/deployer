@@ -1,3 +1,4 @@
+import logger from '../logger/winston.config';
 import { ECSClient, RunTaskCommand } from '@aws-sdk/client-ecs';
 
 const awsConfig = {
@@ -18,6 +19,9 @@ export const buildProject = async (
   gitRepoUrl: string,
   deploymentId: string
 ) => {
+
+  logger.info(`Building project ${projectId}`);
+
   const command = new RunTaskCommand({
     cluster: awsConfig.CLUSTER,
     taskDefinition: awsConfig.TASK,

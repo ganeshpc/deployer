@@ -1,7 +1,9 @@
 import { DeploymentStatus } from '@prisma/client';
 
+import logger from '../../logger/winston.config';
 import * as aws from '../../aws';
 import { prisma } from '../../prisma';
+import ProjectError from './ProjectError';
 
 export const createProject = async (
   name: string,
@@ -9,6 +11,8 @@ export const createProject = async (
   subdomain: string,
   customDomain?: string
 ) => {
+  logger.info(`Creating project ${name}`);
+
   const project = await prisma.project.create({
     data: {
       name,
@@ -22,6 +26,7 @@ export const createProject = async (
 };
 
 export const deployProject = async (projectId: string) => {
+  // check if project exists
   const project = await prisma.project.findUnique({
     where: {
       id: projectId,
@@ -29,13 +34,29 @@ export const deployProject = async (projectId: string) => {
   });
 
   if (!project) {
-    throw new Error('Project not found');
+    logger.info(`Project not found with id ${projectId}`);
+    throw new ProjectError(`Project not found with id ${projectId}`);
+  }
+
+  // check if there is already running deployment
+  const runningDeployment = await prisma.deployment.findFirst({
+    where: {
+      projectId,
+      status: DeploymentStatus.QUEUED,
+    },
+  });
+
+  if (runningDeployment) {
+    logger.info(`Deployment already running for project ${projectId}`);
+    throw new ProjectError(
+      `Deployment already running for project: ${projectId}`
+    );
   }
 
   // TODO: improve promise handling
   const deployment = await prisma.deployment.create({
     data: {
-      projectId,
+      project: { connect: { id: projectId } },
       status: DeploymentStatus.QUEUED,
     },
   });

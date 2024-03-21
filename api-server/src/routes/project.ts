@@ -9,6 +9,10 @@ import ProjectError from '../services/project/ProjectError';
 
 const projectRouter = express.Router();
 
+projectRouter.get('/', async (req: Request, res: Response) => {
+  res.json({ message: 'Hello from project router' });
+});
+
 projectRouter.post(
   '/',
   validators.createProjectValidators,

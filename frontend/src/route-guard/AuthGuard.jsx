@@ -4,14 +4,21 @@ import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 const AuthGuard = ({ children }) => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isInitialized } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      navigate('/auth/login', { state: { from: location.pathname } });
+    if (isInitialized) {
+      if (!isLoggedIn) {
+        navigate('/auth/login', {
+          state: {
+            from: location.pathname,
+          },
+          replace: true,
+        });
+      }
     }
   }, [isLoggedIn, navigate, location.pathname]);
 

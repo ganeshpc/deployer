@@ -13,6 +13,7 @@ const auth = (state = initialState, action) => {
       return {
         ...state,
         isLoggedIn: true,
+        isInitialized: true,
         user: action.payload,
       };
 
@@ -20,13 +21,14 @@ const auth = (state = initialState, action) => {
       return {
         ...state,
         isLoggedIn: false,
+        isInitialized: true,
         user: null,
       };
 
     case SIGNUP:
       return {
         ...state,
-        isLoggedIn: true,
+        isLoggedIn: false,
         user: action.payload,
       };
 

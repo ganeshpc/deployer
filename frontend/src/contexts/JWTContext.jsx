@@ -3,6 +3,7 @@ import { createContext, useEffect, useReducer } from 'react';
 import { jwtDecode } from 'jwt-decode';
 
 import authReducer, { initialState } from './auth-reducer/reducer';
+import * as authActions from './auth-reducer/actions';
 import * as userService from '../services/userService';
 import axiosService from '../services/axiosService';
 
@@ -31,12 +32,12 @@ export const JWTProvider = ({ children }) => {
         if (authToken) {
           const userData = jwtDecode(authToken);
 
-          dispatch({ type: 'LOGIN', payload: userData });
+          dispatch({ type: authActions.LOGIN, payload: userData });
         } else {
-          dispatch({ type: 'LOGOUT' });
+          dispatch({ type: authActions.LOGOUT });
         }
       } catch (error) {
-        dispatch({ type: 'LOGOUT' });
+        dispatch({ type: authActions.LOGOUT });
       }
     };
 
@@ -52,7 +53,7 @@ export const JWTProvider = ({ children }) => {
 
     delete user.authToken;
 
-    dispatch({ type: 'LOGIN', payload: user });
+    dispatch({ type: authActions.LOGIN, payload: user });
   };
 
   const logout = () => {
@@ -60,7 +61,7 @@ export const JWTProvider = ({ children }) => {
 
     userService.logout(state.user.email);
 
-    dispatch({ type: 'LOGOUT' });
+    dispatch({ type: authActions.LOGOUT });
   };
 
   const signUp = async (user) => {

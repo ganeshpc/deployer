@@ -1,7 +1,7 @@
 import Layout from '../layouts/Layout';
 import CreateProject from '../components/CreateProject';
 import ErrorPage from '../pages/ErrorPage';
-import Projects from '../pages/Projects';
+import ProjectList from '../pages/ProjectList';
 
 const ProjectRoutes = {
   path: '',
@@ -10,7 +10,7 @@ const ProjectRoutes = {
   children: [
     {
       path: 'projects',
-      element: <Projects />,
+      element: <ProjectList />,
     },
     {
       path: 'create-project',

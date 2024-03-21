@@ -5,13 +5,24 @@ services:
       dockerfile: Dockerfile
       target: base
     ports:
-      - "9000:9000"
+      - "1234:9000"
     volumes:
       - ./api-server:/workdir/app
       - /workdir/app/node_modules
     environment:
       - NODE_ENV=development
-    command: sh -c "npm install && npm run start:dev"
+      - DATABASE_URL=postgres://postgres:password@api-server-db/postgres
+    command: sh -c "npm install && npx prisma migrate dev && npx prisma generate && npm run start:dev"
+  
+  api-server-db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - /var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 
   fronted:
     build: 

@@ -28,10 +28,15 @@ export const authenticated = (
 
   try {
     const decoded = jwt.verify(authToken, SECRET_KEY);
+
+    if (typeof decoded === 'object' && 'id' in decoded) {
+      req.userId = decoded.id;
+    } else {
+      throw new UnauthorizedError('Invalid authToken');
+    }
   } catch (error) {
     throw new UnauthorizedError('Invalid authToken');
   }
-
 
   next();
 };

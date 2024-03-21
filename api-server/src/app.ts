@@ -9,14 +9,17 @@ import * as validators from './routes/validators';
 import userRouter from './routes/user';
 import projectRouter from './routes/project';
 import logger from './logger/winston.config';
+import UnauthorizedError from './middlewares/UnauthorizedError';
+import { authenticated } from './middlewares/auth';
 
 const app = express();
 
 // helmet middleware for security
 app.use(helmet());
 
-//TODO: remove when in production
-app.use(cors());
+if (process.env.NODE_ENV === 'development') {
+  app.use(cors());
+}
 
 app.use(express.json());
 
@@ -29,7 +32,7 @@ app.get('/health', (req, res) => {
 
 app.use('/user', userRouter);
 
-app.use('/project', projectRouter);
+app.use('/project', authenticated, projectRouter);
 
 // validation error handler
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
@@ -47,7 +50,7 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
 
 // unauthorized error handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  if (err.name === 'UnauthorizedError') {
+  if (err instanceof UnauthorizedError) {
     return res.status(401).json({
       status: 'error',
       message: err.message,

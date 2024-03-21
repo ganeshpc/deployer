@@ -1,7 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
-// import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
-import UnauthorizedError from './UnAuthorizedError';
+import UnauthorizedError from './UnauthorizedError';
+
+const SECRET_KEY = process.env.JWT_SECRET_KEY;
+
+if (!SECRET_KEY) {
+  throw new Error('JWT_SECRET_KEY is not defined in environment variables');
+}
 
 export const authenticated = (
   req: Request,
@@ -20,8 +26,12 @@ export const authenticated = (
     throw new UnauthorizedError('No authToken present');
   }
 
-  //TODO: verify token with jwt
-  // const decoded = jwt.verify(authToken, SECRET_KEY);
+  try {
+    const decoded = jwt.verify(authToken, SECRET_KEY);
+  } catch (error) {
+    throw new UnauthorizedError('Invalid authToken');
+  }
+
 
   next();
 };

@@ -1,10 +1,13 @@
-// import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
+
+const SECRET_KEY = process.env.JWT_SECRET_KEY;
+
+if (!SECRET_KEY) {
+  throw new Error('JWT_SECRET_KEY is not defined in environment variables');
+}
 
 export const generateJwtToken = (payload: object) => {
-  // TODO: implement jwt token generation
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1d' });
 
-  // Token generation
-  //   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' }); // Expires in 1 hour
-
-  return JSON.stringify(payload);
+  return token;
 };

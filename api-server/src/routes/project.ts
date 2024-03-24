@@ -3,20 +3,45 @@ import { validationResult } from 'express-validator';
 import { generateSlug } from 'random-word-slugs';
 
 import logger from '../logger/winston.config';
-import { createProject, deployProject } from '../services/project';
+import {
+  createProject,
+  deployProject,
+  getProjectsByUser,
+} from '../services/project';
 import * as validators from './validators';
 import ProjectError from '../services/project/ProjectError';
 
 const projectRouter = express.Router();
 
-projectRouter.get('/', async (req: Request, res: Response) => {
-  res.json({ message: 'Hello from project router' });
+projectRouter.get(
+  '/',
+  async (req: Request, res: Response, next: NextFunction) => {
+    logger.info(`/GET projects created by: ${req.userId}`);
+
+    const creatorId = req.userId as string;
+
+    const projects = await getProjectsByUser(creatorId);
+
+    res.json(projects);
+  }
+);
+
+projectRouter.get('/:projectId', async (req: Request, res: Response) => {
+  // TODO: implement get project by id
+
+  const { projectId } = req.params;
+
+  res.json({
+    message: `Hello from project router with projectId: ${projectId}`,
+  });
 });
 
 projectRouter.post(
   '/',
   validators.createProjectValidators,
   async (req: Request, res: Response, next: NextFunction) => {
+    logger.info(`/POST create project: ${req.body.name}`);
+
     const validationErrors = validationResult(req);
 
     if (!validationErrors.isEmpty()) {
@@ -25,9 +50,19 @@ projectRouter.post(
 
     const { name, gitUrl, customDomain } = req.body;
 
+    const userId = req.userId as string;
+
+    logger.debug(`Creating project with name: ${name} by user: ${userId}`);
+
     const subdomain = generateSlug();
 
-    const project = await createProject(name, gitUrl, subdomain, customDomain);
+    const project = await createProject(
+      name,
+      userId,
+      gitUrl,
+      subdomain,
+      customDomain
+    );
 
     res.json(project);
   }

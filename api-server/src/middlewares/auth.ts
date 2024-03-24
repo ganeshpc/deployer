@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
 import UnauthorizedError from './UnauthorizedError';
+import logger from '../logger/winston.config';
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
 
@@ -15,6 +16,8 @@ export const authenticated = (
   next: NextFunction
 ) => {
   const authHeader = req.headers.authorization;
+
+  logger.debug(`Auth header: ${authHeader}`);
 
   if (!authHeader) {
     throw new UnauthorizedError('No authorization header present');

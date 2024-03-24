@@ -5,11 +5,24 @@ import * as aws from '../../aws';
 import { prisma } from '../../prisma';
 import ProjectError from './ProjectError';
 
+export const getProjectsByUser = async (userId: string) => {
+  logger.info(`Getting projects for user ${userId}`);
+
+  const projects = await prisma.project.findMany({
+    where: {
+      creatorId: userId,
+    },
+  });
+
+  return projects;
+};
+
 export const createProject = async (
   name: string,
+  creatorId: string,
   gitUrl: string,
   subdomain: string,
-  customDomain?: string
+  customDomain?: string,
 ) => {
   logger.info(`Creating project ${name}`);
 
@@ -18,6 +31,7 @@ export const createProject = async (
       name,
       gitUrl,
       customDomain,
+      creator: { connect: { id: creatorId } },
       subdomain,
     },
   });

@@ -1,6 +1,5 @@
 import { Result, ValidationError, body } from 'express-validator';
 
-
 // custom Error class to handle validation errors
 export class ValidationErrors extends Error {
   errors: ValidationError[];
@@ -14,14 +13,24 @@ export class ValidationErrors extends Error {
 
 export const createUserValidators = [
   body('name', 'Invalid name').isString().notEmpty().trim(),
-  body('username', 'Invalid username').isString().notEmpty().trim().isLength({ min: 3 }),
+  body('username', 'Invalid username')
+    .isString()
+    .notEmpty()
+    .trim()
+    .isLength({ min: 3 }),
   body('email', 'Invalid email').isEmail().normalizeEmail(),
-  body('password', 'Invalid password').isString().notEmpty().isLength({ min: 6 })
+  body('password', 'Invalid password')
+    .isString()
+    .notEmpty()
+    .isLength({ min: 6 }),
 ];
 
 export const loginValidators = [
   body('email', 'Invalid email').isEmail().normalizeEmail(),
-  body('password', 'Invalid password').isString().notEmpty().isLength({ min: 6 })
+  body('password', 'Invalid password')
+    .isString()
+    .notEmpty()
+    .isLength({ min: 6 }),
 ];
 
 export const createProjectValidators = [

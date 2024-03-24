@@ -11,7 +11,7 @@ services:
       - /workdir/app/node_modules
     environment:
       - NODE_ENV=development
-      - DATABASE_URL=postgres://postgres:password@api-server-db/postgres
+      - DATABASE_URL=postgres://postgres:password@api-server-db/deployer
     command: sh -c "npm install && npx prisma migrate dev && npx prisma generate && npm run start:dev"
   
   api-server-db:

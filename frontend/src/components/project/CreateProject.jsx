@@ -1,7 +1,7 @@
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { Button, Card, Stack, TextField, Typography } from '@mui/material';
-import useProject from '../hooks/useProject';
+import useProject from '../../hooks/useProject';
 
 const validationSchema = yup.object({
   projectName: yup

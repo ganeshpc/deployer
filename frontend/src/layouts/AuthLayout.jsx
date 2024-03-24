@@ -8,7 +8,6 @@ const AuthLayout = () => {
     <>
       <Header />
       <div style={{ height: '100px' }}></div>
-
       <Container maxWidth="sm">
         <Outlet />
       </Container>

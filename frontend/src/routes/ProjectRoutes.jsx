@@ -1,5 +1,5 @@
 import Layout from '../layouts/Layout';
-import CreateProject from '../components/CreateProject';
+import CreateProject from '../components/project/CreateProject';
 import ErrorPage from '../pages/ErrorPage';
 import ProjectList from '../pages/ProjectList';
 

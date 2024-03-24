@@ -12,7 +12,7 @@ export const createUser = async (
 ) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = await prisma.user.create({
+  const createdUser = await prisma.user.create({
     data: {
       name,
       username,
@@ -20,6 +20,15 @@ export const createUser = async (
       password: hashedPassword,
     },
   });
+
+  const user = {
+    id: createdUser.id,
+    name: createdUser.name,
+    email: createdUser.email,
+    username: createdUser.username,
+    createdAt: createdUser.createdAt,
+    updatedAt: createdUser.updatedAt,
+  };
 
   return user;
 };

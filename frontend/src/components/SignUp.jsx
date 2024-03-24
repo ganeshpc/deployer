@@ -1,8 +1,16 @@
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
-import { Button, Card, Stack, TextField, Typography } from '@mui/material';
+import {
+  Button,
+  Card,
+  Grid,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import useAuth from '../hooks/useAuth';
+import { Link } from 'react-router-dom';
 
 const validationSchema = yup.object({
   name: yup.string('Enter your name').required('Name is required'),
@@ -44,7 +52,12 @@ const SignUp = () => {
   return (
     <Card sx={{ width: '400px', padding: '20px' }}>
       <Stack spacing={2}>
-        <Typography variant="h4">Sign Up</Typography>
+        <Grid container justifyContent="space-between">
+          <Typography variant="h4">Sign Up</Typography>
+          <Link to="/login">
+            <Button variant="text">Login</Button>
+          </Link>
+        </Grid>
         <TextField
           name="name"
           onChange={formik.handleChange}

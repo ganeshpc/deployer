@@ -1,8 +1,8 @@
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
-import { Button, Card, Stack, TextField, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Box, Button, Card, Stack, TextField, Typography } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 
 import useAuth from '../hooks/useAuth';
 
@@ -26,14 +26,21 @@ const Login = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       await userContext.login(values.email, values.password);
-      navigate('/projects')
+      navigate('/projects');
     },
   });
 
   return (
     <Card sx={{ width: '400px', padding: '20px' }}>
       <Stack spacing={2}>
-        <Typography variant="h4">Login</Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant="h4">Login</Typography>
+          <Link to="/signup">
+            <Button variant="text">
+              Signup
+            </Button>
+          </Link>
+        </Box>
         <TextField
           name="email"
           onChange={formik.handleChange}

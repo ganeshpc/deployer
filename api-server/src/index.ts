@@ -9,6 +9,7 @@ const PORT = process.env.PORT ?? 9000;
 
 const main = async () => {
   try {
+    logger.info('starting api-server...');
     // await initKafka();
 
     app.listen(PORT, () => {

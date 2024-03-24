@@ -2,15 +2,18 @@ import { Outlet } from 'react-router-dom';
 import { Container } from '@mui/material';
 
 import Header from '../components/Header';
+import GuestGuard from '../route-guard/GuestGuard';
 
 const AuthLayout = () => {
   return (
     <>
       <Header />
       <div style={{ height: '100px' }}></div>
-      <Container maxWidth="sm">
-        <Outlet />
-      </Container>
+      <GuestGuard>
+        <Container maxWidth="sm">
+          <Outlet />
+        </Container>
+      </GuestGuard>
     </>
   );
 };

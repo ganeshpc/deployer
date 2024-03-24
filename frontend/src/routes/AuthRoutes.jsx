@@ -4,7 +4,7 @@ import AuthLayout from '../layouts/AuthLayout';
 import ErrorPage from '../pages/ErrorPage';
 
 const AuthRoutes = {
-  path: 'auth',
+  path: '',
   element: <AuthLayout />,
   errorElement: <ErrorPage />,
   children: [

@@ -12,7 +12,7 @@ const AuthGuard = ({ children }) => {
   useEffect(() => {
     if (isInitialized) {
       if (!isLoggedIn) {
-        navigate('/auth/login', {
+        navigate('/login', {
           state: {
             from: location.pathname,
           },
@@ -20,7 +20,7 @@ const AuthGuard = ({ children }) => {
         });
       }
     }
-  }, [isLoggedIn, navigate, location.pathname]);
+  }, [isLoggedIn, isInitialized, navigate, location.pathname]);
 
   return children;
 };

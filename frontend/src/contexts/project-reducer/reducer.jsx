@@ -1,4 +1,9 @@
-import { CREATE_PROJECT, UPDATE_PROJECT, DELETE_PROJECT } from './actions';
+import {
+  SET_PROJECTS,
+  CREATE_PROJECT,
+  UPDATE_PROJECT,
+  DELETE_PROJECT,
+} from './actions';
 
 export const initialState = {
   projects: [
@@ -11,6 +16,12 @@ export const initialState = {
 
 const projectReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SET_PROJECTS:
+      return {
+        ...state,
+        projects: action.payload,
+      };
+
     case CREATE_PROJECT:
       return {
         ...state,

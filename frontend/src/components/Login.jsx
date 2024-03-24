@@ -2,6 +2,8 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 import { Button, Card, Stack, TextField, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+
 import useAuth from '../hooks/useAuth';
 
 const validationSchema = yup.object({
@@ -13,6 +15,7 @@ const validationSchema = yup.object({
 });
 
 const Login = () => {
+  const navigate = useNavigate();
   const userContext = useAuth();
 
   const formik = useFormik({
@@ -21,8 +24,9 @@ const Login = () => {
       password: '',
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      userContext.login(values.email, values.password);
+    onSubmit: async (values) => {
+      await userContext.login(values.email, values.password);
+      navigate('/projects')
     },
   });
 

@@ -6,6 +6,7 @@ import logger from '../logger/winston.config';
 import {
   createProject,
   deployProject,
+  getProjectById,
   getProjectsByUser,
 } from '../services/project';
 import * as validators from './validators';
@@ -27,13 +28,12 @@ projectRouter.get(
 );
 
 projectRouter.get('/:projectId', async (req: Request, res: Response) => {
-  // TODO: implement get project by id
 
   const { projectId } = req.params;
 
-  res.json({
-    message: `Hello from project router with projectId: ${projectId}`,
-  });
+  const project = await getProjectById(projectId);
+
+  res.json(project);
 });
 
 projectRouter.post(

@@ -5,6 +5,23 @@ import * as aws from '../../aws';
 import { prisma } from '../../prisma';
 import ProjectError from './ProjectError';
 
+export const getProjectById = async (projectId: string) => {
+  logger.info(`Getting project with id ${projectId}`);
+
+  const project = await prisma.project.findUnique({
+    where: {
+      id: projectId,
+    },
+  });
+
+  if (!project) {
+    logger.info(`Project not found with id ${projectId}`);
+    throw new ProjectError(`Project not found with id ${projectId}`);
+  }
+
+  return project;
+};
+
 export const getProjectsByUser = async (userId: string) => {
   logger.info(`Getting projects for user ${userId}`);
 
@@ -22,7 +39,7 @@ export const createProject = async (
   creatorId: string,
   gitUrl: string,
   subdomain: string,
-  customDomain?: string,
+  customDomain?: string
 ) => {
   logger.info(`Creating project ${name}`);
 

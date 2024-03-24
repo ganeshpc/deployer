@@ -59,6 +59,15 @@ router.post(
   }
 );
 
+router.post('/logout', (req: Request, res: Response) => {
+  logger.info('POST /user/logout');
+
+  //TODO: implement logout (for now, just return success status)
+  // save the jwt token on login and then delete it on logout
+
+  res.json({ status: 'success' });
+});
+
 router.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof InvalidCredentialsError) {
     logger.error('Invalid credentials', { error });

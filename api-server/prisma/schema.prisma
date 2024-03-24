@@ -14,13 +14,14 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String
-  email     String   @unique
-  username  String   @unique
+  email     String    @unique
+  username  String    @unique
   password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  projects  Project[]
 
   @@map("app_user")
 }
@@ -40,6 +41,8 @@ model Project {
   subdomain    String
   customDomain String?      @map("custom_domain")
   deployments  Deployment[]
+  creator      User         @relation(fields: [creatorId], references: [id])
+  creatorId    String       @map("creator_id")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

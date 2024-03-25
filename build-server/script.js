@@ -1,35 +1,47 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 const { Kafka } = require('kafkajs');
+const mime = require('mime-types');
 
 const PROJECT_ID = process.env.PROJECT_ID;
 const DEPLOYMENT_ID = process.env.DEPLOYMENT_ID;
 
+const KAFKA_BROKER = process.env.KAFKA_BROKER;
+const KAFKA_USERNAME = process.env.KAFKA_USERNAME;
+const KAFKA_PASSWORD = process.env.KAFKA_PASSWORD;
+const KAFKA_CERTIFICATE = process.env.KAFKA_CERTIFICATE;
+
+const AWS_REGION = process.env.AWS_REGION;
+const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
+const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
+
+// connect to kafka
 const kafka = new Kafka({
   clientId: `build-server-${DEPLOYMENT_ID}`,
-  brokers: [
-    'db-kafka-blr1-77912-do-user-15981714-0.c.db.ondigitalocean.com:25073',
-  ],
+  brokers: [KAFKA_BROKER],
   sasl: {
-    username: 'doadmin',
-    password: 'AVNS_mLZ_u6GTIqomZVnuX3j',
+    username: KAFKA_USERNAME,
+    password: KAFKA_PASSWORD,
+    mechanism: 'plain',
   },
   ssl: {
-    ca: fs.readFileSync('./ca-certificate.crt', 'utf-8'),
+    ca: fs.readFileSync(`./${KAFKA_CERTIFICATE}`, 'utf-8'),
   },
 });
 
 const proudcer = kafka.producer();
 
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
-const mime = require('mime-types');
-
 const s3Client = new S3Client({
-  region: 'ap-south-1',
+  region: AWS_REGION,
   credentials: {
-    accessKeyId: 'AKIA2FMJCPZUWS5LVSFR',
-    secretAccessKey: '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',
+    accessKeyId: AWS_ACCESS_KEY_ID,
+    secretAccessKey: AWS_SECRET_ACCESS_KEY,
   },
 });
 
@@ -46,6 +58,7 @@ async function init() {
   await proudcer.connect();
 
   console.log('Executing script.js');
+
   publishLog('build started...');
 
   const outDir = path.join(__dirname, 'output');
@@ -62,6 +75,10 @@ async function init() {
 
   cp.on('close', async function () {
     console.log('build complete!');
+
+    console.log(`uploading files to s3: __output/${PROJECT_ID}`);
+
+    publishLog('build complete...');
 
     const distDir = path.join(__dirname, 'output', 'dist');
 
@@ -92,7 +109,7 @@ async function init() {
 
     publishLog('build complete');
 
-    publisher.quit();
+    await proudcer.disconnect();
 
     process.exit(0);
   });

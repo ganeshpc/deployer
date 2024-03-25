@@ -24,6 +24,8 @@ COPY main.sh main.sh
 
 COPY script.js script.js
 
+COPY .env .env
+
 RUN chmod +x main.sh
 RUN chmod +x script.js
 

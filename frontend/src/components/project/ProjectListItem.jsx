@@ -6,6 +6,7 @@ import {
   ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
+  Typography,
 } from '@mui/material';
 import FolderIcon from '@mui/icons-material/Folder';
 import { Link } from 'react-router-dom';
@@ -14,12 +15,15 @@ const ProjectListItem = ({ project }) => {
   return (
     <>
       <ListItem alignItems="flex-start">
-        <ListItemAvatar >
+        <ListItemAvatar>
           <Avatar>
             <FolderIcon />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary={project.name} secondary={project.gitUrl} />
+        <ListItemText
+          primary={<Typography variant="h6">{project.name} </Typography>}
+          secondary={project.gitUrl}
+        />
         <ListItemSecondaryAction>
           <Link to={`/projects/${project.id}`}>
             <Button variant="outlined">View</Button>

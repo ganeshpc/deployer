@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import useAuth from '../hooks/useAuth';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const validationSchema = yup.object({
   name: yup.string('Enter your name').required('Name is required'),
@@ -27,6 +27,7 @@ const validationSchema = yup.object({
 });
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const userContext = useAuth();
 
   const formik = useFormik({
@@ -38,14 +39,19 @@ const SignUp = () => {
       confirmPassword: '',
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       const userData = {
         name: values.name,
         email: values.email,
         username: values.username,
         password: values.password,
       };
-      userContext.signUp(userData);
+      try {
+        await userContext.signUp(userData);
+        navigate('/login');
+      } catch (error) {
+        console.error(error);
+      }
     },
   });
 

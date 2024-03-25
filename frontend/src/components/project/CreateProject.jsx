@@ -2,6 +2,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { Button, Card, Stack, TextField, Typography } from '@mui/material';
 import useProject from '../../hooks/useProject';
+import { useNavigate } from 'react-router-dom';
 
 const validationSchema = yup.object({
   projectName: yup
@@ -11,6 +12,7 @@ const validationSchema = yup.object({
 });
 
 const CreateProject = () => {
+  const navigate = useNavigate();
   const projectContext = useProject();
 
   const formik = useFormik({
@@ -19,11 +21,17 @@ const CreateProject = () => {
       gitUrl: '',
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      projectContext.createProject({
-        name: values.projectName,
-        gitUrl: values.gitUrl,
-      });
+    onSubmit: async (values) => {
+      try {
+        await projectContext.createProject({
+          name: values.projectName,
+          gitUrl: values.gitUrl,
+        });
+
+        navigate('/projects');
+      } catch (error) {
+        console.error(error);
+      }
     },
   });
 

@@ -58,24 +58,27 @@ async function init() {
   await proudcer.connect();
 
   console.log('Executing script.js');
-
   publishLog('build started...');
 
   const outDir = path.join(__dirname, 'output');
+
+  console.log('Rnning npm install and build...');
+  publishLog('Rnning npm install and build...');
 
   const cp = exec(`cd ${outDir} && npm install && npm run build`);
 
   cp.stdout.on('data', function (data) {
     console.log(data.toString());
+    publishLog(data.toString());
   });
 
   cp.stdout.on('error', function (error) {
     console.log(error.toString());
+    publishLog(error.toString());
   });
 
   cp.on('close', async function () {
     console.log('build complete!');
-
     console.log(`uploading files to s3: __output/${PROJECT_ID}`);
 
     publishLog('build complete...');
@@ -89,7 +92,6 @@ async function init() {
       if (fs.lstatSync(filePath).isDirectory()) continue;
 
       console.log('uploading...', filePath);
-
       publishLog(`uploading ${filePath}`);
 
       const command = new PutObjectCommand({
@@ -102,12 +104,11 @@ async function init() {
       await s3Client.send(command);
 
       console.log('uploaded', filePath);
-
       publishLog(`uploaded ${filePath}`);
     }
-    console.log('done...');
 
-    publishLog('build complete');
+    console.log('done...');
+    publishLog('files uploaded...');
 
     await proudcer.disconnect();
 

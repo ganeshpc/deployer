@@ -4,6 +4,7 @@
 CREATE TABLE log_events (
   event_id UUID,
   timestamp DateTime MATERIALIZED now(),
+  project_id Nullable(String),
   deployment_id Nullable(String),
   log String,
   metadata Nullable(String)

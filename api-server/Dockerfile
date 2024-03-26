@@ -1,7 +1,8 @@
 # base stage
 FROM node:20-alpine as base
 
-USER node
+# TODO: change the root user to a non-root user
+# USER node
 
 RUN mkdir -p /workdir
 

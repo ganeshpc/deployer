@@ -4,6 +4,7 @@ import logger from '../../logger/winston.config';
 import * as aws from '../../aws';
 import { prisma } from '../../prisma';
 import ProjectError from './ProjectError';
+import client from '../../clickhouse';
 
 export const getProjectById = async (projectId: string) => {
   logger.info(`Getting project with id ${projectId}`);
@@ -115,4 +116,19 @@ export const getDeployement = async (deploymentId: string) => {
   });
 
   return deployment;
-}
+};
+
+export const getDeploymentLogs = async (deploymentId: string) => {
+  const logs = await client.query({
+    query:
+      'SELECT event_id, log, timestamp FROM log_events WHERE deployment_id = {deploymentId:String}',
+    query_params: {
+      deploymentId,
+    },
+    format: 'JSONEachRow',
+  });
+
+  const rawLogs = await logs.json();
+
+  return rawLogs;
+};

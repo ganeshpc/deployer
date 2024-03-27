@@ -9,6 +9,8 @@ import {
   getProjectById,
   getProjectDeployements,
   getProjectsByUser,
+  getDeploymentLogs,
+  getDeployement,
 } from '../services/project';
 import * as validators from './validators';
 import ProjectError from '../services/project/ProjectError';
@@ -105,6 +107,42 @@ projectRouter.get(
       res.json(deployment);
     } catch (error) {
       logger.error('deployment error', error);
+
+      next(error);
+    }
+  }
+);
+
+projectRouter.get(
+  '/deployment/:deploymentId',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      logger.debug(`/GET deployment: ${req.params.deploymentId}`);
+      const { deploymentId } = req.params;
+
+      const deployment = await getDeployement(deploymentId);
+
+      res.json(deployment);
+    } catch (error) {
+      logger.error('deployment error', error);
+
+      next(error);
+    }
+  }
+);
+
+projectRouter.get(
+  '/logs/:deploymentId',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      logger.debug(`/GET logs for deployment: ${req.params.deploymentId}`);
+      const { deploymentId } = req.params;
+
+      const logs = await getDeploymentLogs(deploymentId);
+
+      res.json(logs);
+    } catch (error) {
+      logger.info('logs error', error);
 
       next(error);
     }

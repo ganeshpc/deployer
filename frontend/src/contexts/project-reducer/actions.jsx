@@ -6,3 +6,4 @@ export const ADD_PROJECT = '@project/ADD_PROJECT';
 
 export const SET_DEPLOYMENTS = '@project/SET_DEPLOYMENTS';
 export const SET_DEPLOYMENT = '@project/SET_DEPLOYMENT';
+export const SET_DEPLOYMENT_LOGS = '@project/SET_DEPLOYMENT_LOGS';

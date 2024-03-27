@@ -10,7 +10,7 @@ const Layout = () => {
       <Header />
       <div style={{ height: '100px' }}></div>
       <AuthGuard>
-        <Container maxWidth="sm">
+        <Container maxWidth="md">
           <Outlet />
         </Container>
       </AuthGuard>

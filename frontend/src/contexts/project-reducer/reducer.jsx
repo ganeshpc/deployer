@@ -6,6 +6,7 @@ import {
   SET_DEPLOYMENTS,
   ADD_PROJECT,
   SET_DEPLOYMENT,
+  SET_DEPLOYMENT_LOGS,
 } from './actions';
 
 export const initialState = {
@@ -26,6 +27,7 @@ export const initialState = {
     // other data
     // logs
   },
+  deploymentLogs: [],
 };
 
 const projectReducer = (state = initialState, action) => {
@@ -82,6 +84,12 @@ const projectReducer = (state = initialState, action) => {
       return {
         ...state,
         deployment: action.payload,
+      };
+
+    case SET_DEPLOYMENT_LOGS:
+      return {
+        ...state,
+        deploymentLogs: action.payload,
       };
 
     default:

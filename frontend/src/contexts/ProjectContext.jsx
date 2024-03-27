@@ -5,6 +5,7 @@ import {
   CREATE_PROJECT,
   SET_DEPLOYMENTS,
   ADD_PROJECT,
+  SET_DEPLOYMENT_LOGS,
 } from './project-reducer/actions';
 import projectReducer, { initialState } from './project-reducer/reducer';
 
@@ -73,6 +74,14 @@ export const ProjectProvider = ({ children }) => {
     return deployment;
   }
 
+  const getDeploymentLogs = async (deploymentId) => {
+    const logs = await projectService.getDeploymentLogs(deploymentId);
+
+    dispatch({ type: SET_DEPLOYMENT_LOGS, payload: logs });
+
+    return logs;
+  }
+
   return (
     <ProjectContext.Provider
       value={{
@@ -83,7 +92,8 @@ export const ProjectProvider = ({ children }) => {
         deleteProject,
         getDeployments,
         getProject,
-        getDeployment
+        getDeployment,
+        getDeploymentLogs,
       }}
     >
       {children}

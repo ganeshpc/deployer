@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+
+import { Box, Button, Grid, Typography } from '@mui/material';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 import useProject from '../hooks/useProject';
-import { Box, Typography } from '@mui/material';
 import DeploymentLogs from '../components/project/DeploymentLogs';
 
 const Deployment = () => {
-  const { deploymentId } = useParams();
+  const { projectId, deploymentId } = useParams();
   const projectContext = useProject();
 
   useEffect(() => {
@@ -15,9 +17,14 @@ const Deployment = () => {
 
   return (
     <Box>
-      <Typography variant="h4">Deployment</Typography>
+      <Grid container justifyContent="space-between">
+        <Typography variant="h4">Deployment</Typography>
+        <Link to={`/projects/${projectId}`}>
+          <Button variant="outlined">Back</Button>
+        </Link>
+      </Grid>
       {projectContext.deployment && (
-        <DeploymentLogs deployment={projectContext.deployment} />
+        <DeploymentLogs deploymentId={deploymentId} />
       )}
     </Box>
   );

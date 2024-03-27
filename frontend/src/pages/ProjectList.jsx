@@ -15,7 +15,7 @@ const ProjectList = () => {
 
   return (
     <Box>
-      {projectContext.projects && projectContext.projects.length === 0 ? (
+      {!projectContext.projects || projectContext.projects.length === 0 ? (
         <Grid
           container
           justifyContent="center"

@@ -106,3 +106,13 @@ export const getProjectDeployements = async (projectId: string) => {
 
   return deployments;
 };
+
+export const getDeployement = async (deploymentId: string) => {
+  const deployment = await prisma.deployment.findUnique({
+    where: {
+      id: deploymentId,
+    },
+  });
+
+  return deployment;
+}

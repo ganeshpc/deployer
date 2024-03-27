@@ -5,6 +5,7 @@ import {
   DELETE_PROJECT,
   SET_DEPLOYMENTS,
   ADD_PROJECT,
+  SET_DEPLOYMENT,
 } from './actions';
 
 export const initialState = {
@@ -20,6 +21,11 @@ export const initialState = {
     //    ]
     // },
   ],
+  deployment: {
+    // id: 1,
+    // other data
+    // logs
+  },
 };
 
 const projectReducer = (state = initialState, action) => {
@@ -70,6 +76,12 @@ const projectReducer = (state = initialState, action) => {
           }
           return project;
         }),
+      };
+
+    case SET_DEPLOYMENT:
+      return {
+        ...state,
+        deployment: action.payload,
       };
 
     default:

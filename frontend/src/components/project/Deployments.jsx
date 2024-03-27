@@ -47,7 +47,11 @@ const Deployments = ({ project }) => {
         <List>
           {deployments.map((deployment) => {
             return (
-              <DeploymentListItem key={deployment.id} deployment={deployment} />
+              <DeploymentListItem
+                key={deployment.id}
+                deployment={deployment}
+                projectId={project.id}
+              />
             );
           })}
         </List>
@@ -60,7 +64,7 @@ Deployments.propTypes = {
   project: PropTypes.object.isRequired,
 };
 
-const DeploymentListItem = ({ deployment }) => {
+const DeploymentListItem = ({ deployment, projectId }) => {
   return (
     <>
       <ListItem alignItems="flex-start">
@@ -71,12 +75,12 @@ const DeploymentListItem = ({ deployment }) => {
         </ListItemAvatar>
         <ListItemText
           primary={
-            <Typography variant="h6">{deployment.subdomain} </Typography>
+            <Typography variant="h6">Status: {deployment.status} </Typography>
           }
           secondary={deployment.id}
         />
         <ListItemSecondaryAction>
-          <Link to={`/deployment/${deployment.id}`}>
+          <Link to={`/projects/${projectId}/${deployment.id}`}>
             <Button variant="outlined">Show Logs</Button>
           </Link>
         </ListItemSecondaryAction>

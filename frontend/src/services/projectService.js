@@ -48,3 +48,13 @@ export const getDeployments = async (projectId) => {
     return error;
   }
 };
+
+export const getDeployment = async (deploymentId) => {
+  try {
+    const response = await axios.get(`/project/deployment/${deploymentId}`);
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};

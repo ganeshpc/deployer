@@ -57,13 +57,21 @@ export const ProjectProvider = ({ children }) => {
   };
 
   const getDeployments = async (projectId) => {
-    // Dispatch the projectId and deployments array to the reducer
     const deployments = await projectService.getDeployments(projectId);
 
     dispatch({ type: SET_DEPLOYMENTS, payload: { projectId, deployments } });
 
     return deployments;
   };
+
+  const getDeployment = async (deploymentId) => {
+    // Make a GET request to the server
+    const deployment = await projectService.getDeployment(deploymentId);
+
+    dispatch({ type: SET_DEPLOYMENTS, payload: deployment })
+
+    return deployment;
+  }
 
   return (
     <ProjectContext.Provider
@@ -75,6 +83,7 @@ export const ProjectProvider = ({ children }) => {
         deleteProject,
         getDeployments,
         getProject,
+        getDeployment
       }}
     >
       {children}

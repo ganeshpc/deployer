@@ -10,6 +10,16 @@ export const getProjects = async () => {
   }
 };
 
+export const getProject = async (projectId) => {
+  try {
+    const response = await axios.get(`/project/${projectId}`);
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const createProject = async (projectData) => {
   try {
     const { name, gitUrl } = projectData;
@@ -22,6 +32,16 @@ export const createProject = async (projectData) => {
       name,
       gitUrl,
     });
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getDeployments = async (projectId) => {
+  try {
+    const response = await axios.get(`/project/${projectId}/deployment`);
 
     return response.data;
   } catch (error) {

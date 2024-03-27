@@ -1,6 +1,11 @@
-import { createContext, useReducer } from 'react';
+import { createContext, useEffect, useReducer } from 'react';
 
-import { SET_PROJECTS, CREATE_PROJECT } from './project-reducer/actions';
+import {
+  SET_PROJECTS,
+  CREATE_PROJECT,
+  SET_DEPLOYMENTS,
+  ADD_PROJECT,
+} from './project-reducer/actions';
 import projectReducer, { initialState } from './project-reducer/reducer';
 
 import * as projectService from '../services/projectService';
@@ -10,6 +15,10 @@ const ProjectContext = createContext(null);
 export const ProjectProvider = ({ children }) => {
   const [state, dispatch] = useReducer(projectReducer, initialState);
 
+  useEffect(() => {
+    getProjects();
+  }, []);
+
   const getProjects = async () => {
     const projects = await projectService.getProjects();
 
@@ -18,6 +27,14 @@ export const ProjectProvider = ({ children }) => {
     dispatch({ type: SET_PROJECTS, payload: projects });
 
     // If the request is unsuccessful, dispatch an error message to the reducer
+  };
+
+  const getProject = async (projectId) => {
+    const project = await projectService.getProject(projectId);
+
+    dispatch({ type: ADD_PROJECT, payload: project });
+
+    return project;
   };
 
   const createProject = async (project) => {
@@ -39,9 +56,26 @@ export const ProjectProvider = ({ children }) => {
     // If the request is unsuccessful, dispatch an error message to the reducer
   };
 
+  const getDeployments = async (projectId) => {
+    // Dispatch the projectId and deployments array to the reducer
+    const deployments = await projectService.getDeployments(projectId);
+
+    dispatch({ type: SET_DEPLOYMENTS, payload: { projectId, deployments } });
+
+    return deployments;
+  };
+
   return (
     <ProjectContext.Provider
-      value={{ ...state, getProjects, createProject, updateProject, deleteProject }}
+      value={{
+        ...state,
+        getProjects,
+        createProject,
+        updateProject,
+        deleteProject,
+        getDeployments,
+        getProject,
+      }}
     >
       {children}
     </ProjectContext.Provider>

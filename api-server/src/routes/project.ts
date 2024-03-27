@@ -96,6 +96,7 @@ projectRouter.post(
 projectRouter.get(
   '/:projectId/deployment',
   async (req: Request, res: Response, next: NextFunction) => {
+    logger.debug(`/GET deployment for project: ${req.params.projectId}`);
     try {
       const { projectId } = req.params;
 

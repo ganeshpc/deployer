@@ -9,6 +9,7 @@ import {
 import { createUser, login } from '../services/user';
 import InvalidCredentialsError from '../services/user/InvalidCredentialsError';
 import logger from '../logger/winston.config';
+import UserError from '../services/user/UserError';
 
 const router = express.Router();
 
@@ -70,11 +71,20 @@ router.post('/logout', (req: Request, res: Response) => {
 
 router.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof InvalidCredentialsError) {
-    logger.error('Invalid credentials', { error });
+    logger.info('Invalid credentials', { error });
 
     return res.status(401).json({
       status: 'error',
       message: 'Invalid credentials',
+    });
+  }
+
+  if (error instanceof UserError) {
+    logger.info('User error', { error });
+
+    return res.status(400).json({
+      status: 'error',
+      message: error.message,
     });
   }
 

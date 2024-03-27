@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import { prisma } from '../../prisma';
 import InvalidCredentialsError from './InvalidCredentialsError';
 import { generateJwtToken } from './jwt';
+import UserError from './UserError';
 
 export const createUser = async (
   name: string,
@@ -41,7 +42,7 @@ export const login = async (email: string, password: string) => {
   });
 
   if (!user) {
-    throw new InvalidCredentialsError();
+    throw new UserError(`User with email ${email} does not exist.`);
   }
 
   const passwordMatch = await bcrypt.compare(password, user.password);

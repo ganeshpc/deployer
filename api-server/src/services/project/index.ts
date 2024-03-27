@@ -96,3 +96,13 @@ export const deployProject = async (projectId: string) => {
 
   return deployment;
 };
+
+export const getProjectDeployements = async (projectId: string) => {
+  const deployments = await prisma.deployment.findMany({
+    where: {
+      projectId,
+    },
+  });
+
+  return deployments;
+};

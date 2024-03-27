@@ -7,6 +7,7 @@ import {
   createProject,
   deployProject,
   getProjectById,
+  getProjectDeployements,
   getProjectsByUser,
 } from '../services/project';
 import * as validators from './validators';
@@ -28,7 +29,6 @@ projectRouter.get(
 );
 
 projectRouter.get('/:projectId', async (req: Request, res: Response) => {
-
   const { projectId } = req.params;
 
   const project = await getProjectById(projectId);
@@ -89,6 +89,23 @@ projectRouter.post(
       logger.error('deploy error', error);
 
       return next(error);
+    }
+  }
+);
+
+projectRouter.get(
+  '/:projectId/deployment',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { projectId } = req.params;
+
+      const deployment = await getProjectDeployements(projectId);
+
+      res.json(deployment);
+    } catch (error) {
+      logger.error('deployment error', error);
+
+      next(error);
     }
   }
 );

@@ -74,7 +74,10 @@ export const deployProject = async (projectId: string) => {
   const runningDeployment = await prisma.deployment.findFirst({
     where: {
       projectId,
-      status: DeploymentStatus.QUEUED,
+      AND: [
+        { status: DeploymentStatus.QUEUED },
+        { status: DeploymentStatus.IN_PROGRESS },
+      ],
     },
   });
 
@@ -131,4 +134,20 @@ export const getDeploymentLogs = async (deploymentId: string) => {
   const rawLogs = await logs.json();
 
   return rawLogs;
+};
+
+export const setDeploymentStatus = async (
+  deploymentId: string,
+  deploymentStatus: DeploymentStatus
+) => {
+  const updatedDeployment = await prisma.deployment.update({
+    where: {
+      id: deploymentId,
+    },
+    data: {
+      status: deploymentStatus,
+    },
+  });
+
+  return updatedDeployment;
 };

@@ -45,6 +45,18 @@ const s3Client = new S3Client({
   },
 });
 
+const publishDeploymentStatus = async (status) => {
+  await proudcer.send({
+    topic: 'deployment_status',
+    messages: [
+      {
+        key: 'status',
+        value: JSON.stringify({ PROJECT_ID, DEPLOYMENT_ID, status }),
+      },
+    ],
+  });
+};
+
 const publishLog = async (log) => {
   await proudcer.send({
     topic: 'container-logs',
@@ -56,6 +68,8 @@ const publishLog = async (log) => {
 
 async function init() {
   await proudcer.connect();
+
+  publishDeploymentStatus('IN_PROGRESS');
 
   console.log('Executing script.js');
   publishLog('build started...');
@@ -109,6 +123,8 @@ async function init() {
 
     console.log('done...');
     publishLog('files uploaded...');
+
+    publishDeploymentStatus('COMPLETED');
 
     await proudcer.disconnect();
 

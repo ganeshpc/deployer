@@ -17,6 +17,9 @@ import ProjectError from '../services/project/ProjectError';
 
 const projectRouter = express.Router();
 
+/**
+ * Get all projects created by the user
+ */
 projectRouter.get(
   '/',
   async (req: Request, res: Response, next: NextFunction) => {
@@ -30,6 +33,9 @@ projectRouter.get(
   }
 );
 
+/**
+ * Get project by id
+ */
 projectRouter.get('/:projectId', async (req: Request, res: Response) => {
   const { projectId } = req.params;
 
@@ -38,6 +44,9 @@ projectRouter.get('/:projectId', async (req: Request, res: Response) => {
   res.json(project);
 });
 
+/**
+ * Create a new project
+ */
 projectRouter.post(
   '/',
   validators.createProjectValidators,
@@ -70,6 +79,9 @@ projectRouter.post(
   }
 );
 
+/**
+ * This route will create a new deployment for the project
+ */
 projectRouter.post(
   '/deploy',
   validators.deployProjectValidators,
@@ -95,6 +107,9 @@ projectRouter.post(
   }
 );
 
+/**
+ * Get all deployments for a project
+ */
 projectRouter.get(
   '/:projectId/deployment',
   async (req: Request, res: Response, next: NextFunction) => {
@@ -102,9 +117,9 @@ projectRouter.get(
     try {
       const { projectId } = req.params;
 
-      const deployment = await getProjectDeployements(projectId);
+      const deployments = await getProjectDeployements(projectId);
 
-      res.json(deployment);
+      res.json(deployments);
     } catch (error) {
       logger.error('deployment error', error);
 
@@ -113,6 +128,9 @@ projectRouter.get(
   }
 );
 
+/**
+ * Get deployment by id
+ */
 projectRouter.get(
   '/deployment/:deploymentId',
   async (req: Request, res: Response, next: NextFunction) => {
@@ -131,6 +149,9 @@ projectRouter.get(
   }
 );
 
+/**
+ * Get logs for a deployment
+ */
 projectRouter.get(
   '/logs/:deploymentId',
   async (req: Request, res: Response, next: NextFunction) => {
@@ -149,6 +170,9 @@ projectRouter.get(
   }
 );
 
+/**
+ * Error handler for project routes handles ProjectError
+ */
 projectRouter.use(
   (error: Error, req: Request, res: Response, next: NextFunction) => {
     if (error instanceof ProjectError) {

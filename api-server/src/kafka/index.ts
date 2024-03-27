@@ -7,6 +7,8 @@ import { Kafka } from 'kafkajs';
 
 import { saveLogToDatabase } from '../services/deployment';
 
+import * as projectService from '../services/project';
+
 const broker = process.env.KAFKA_BROKER as string;
 const username = process.env.KAFKA_USERNAME as string;
 const password = process.env.KAFKA_PASSWORD as string;
@@ -25,13 +27,20 @@ const kafka = new Kafka({
   },
 });
 
-export const logConsumer = kafka.consumer({
+const logConsumer = kafka.consumer({
   groupId: 'api-server-logs-consumer',
+});
+
+const deploymentStatusConsumer = kafka.consumer({
+  groupId: 'api-server-deployment-status-consumer',
 });
 
 export const initKafka = async () => {
   await logConsumer.connect();
   await logConsumer.subscribe({ topics: ['container-logs'] });
+
+  await deploymentStatusConsumer.connect();
+  await deploymentStatusConsumer.subscribe({ topics: ['deployment_status'] });
 
   await logConsumer.run({
     eachBatch: async ({ batch, resolveOffset, heartbeat }) => {
@@ -45,11 +54,24 @@ export const initKafka = async () => {
 
           saveLogToDatabase(PROJECT_ID, DEPLOYMENT_ID, log);
 
-          
           resolveOffset(message.offset);
           await heartbeat();
         }
       });
+    },
+  });
+
+  await deploymentStatusConsumer.run({
+    eachMessage: async ({ message }) => {
+      const stringMessage = message.value?.toString();
+
+      logger.debug('deployment status message received: ', stringMessage);
+
+      if (stringMessage !== undefined) {
+        const { PROJECT_ID, DEPLOYMENT_ID, status } = JSON.parse(stringMessage);
+
+        projectService.setDeploymentStatus(DEPLOYMENT_ID, status);
+      }
     },
   });
 

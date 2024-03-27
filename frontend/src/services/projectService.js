@@ -68,3 +68,15 @@ export const getDeploymentLogs = async (deploymentId) => {
     return error;
   }
 };
+
+export const deployProject = async (projectId) => {
+  try {
+    const response = await axios.post(`/project/deploy`, {
+      projectId,
+    });
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};

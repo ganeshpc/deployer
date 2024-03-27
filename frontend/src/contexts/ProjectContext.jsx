@@ -6,6 +6,7 @@ import {
   SET_DEPLOYMENTS,
   ADD_PROJECT,
   SET_DEPLOYMENT_LOGS,
+  ADD_DEPLOYMENT,
 } from './project-reducer/actions';
 import projectReducer, { initialState } from './project-reducer/reducer';
 
@@ -69,10 +70,10 @@ export const ProjectProvider = ({ children }) => {
     // Make a GET request to the server
     const deployment = await projectService.getDeployment(deploymentId);
 
-    dispatch({ type: SET_DEPLOYMENTS, payload: deployment })
+    dispatch({ type: SET_DEPLOYMENTS, payload: deployment });
 
     return deployment;
-  }
+  };
 
   const getDeploymentLogs = async (deploymentId) => {
     const logs = await projectService.getDeploymentLogs(deploymentId);
@@ -80,7 +81,16 @@ export const ProjectProvider = ({ children }) => {
     dispatch({ type: SET_DEPLOYMENT_LOGS, payload: logs });
 
     return logs;
-  }
+  };
+
+  const deployProject = async (projectId) => {
+    // Make a POST request to the server
+    const deployment = await projectService.deployProject(projectId);
+
+    dispatch({ type: ADD_DEPLOYMENT, payload: { projectId, deployment } });
+
+    // If the request is unsuccessful, dispatch an error message to the reducer
+  };
 
   return (
     <ProjectContext.Provider
@@ -94,6 +104,7 @@ export const ProjectProvider = ({ children }) => {
         getProject,
         getDeployment,
         getDeploymentLogs,
+        deployProject,
       }}
     >
       {children}

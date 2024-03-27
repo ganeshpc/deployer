@@ -7,6 +7,7 @@ import {
   ADD_PROJECT,
   SET_DEPLOYMENT,
   SET_DEPLOYMENT_LOGS,
+  ADD_DEPLOYMENT,
 } from './actions';
 
 export const initialState = {
@@ -74,6 +75,20 @@ const projectReducer = (state = initialState, action) => {
             return {
               ...project,
               deployments: action.payload.deployments,
+            };
+          }
+          return project;
+        }),
+      };
+
+    case ADD_DEPLOYMENT:
+      return {
+        ...state,
+        projects: state.projects.map((project) => {
+          if (project.id === action.payload.projectId) {
+            return {
+              ...project,
+              deployments: [action.payload.deployment, ...project.deployments],
             };
           }
           return project;

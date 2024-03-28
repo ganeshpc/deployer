@@ -8,6 +8,8 @@ import {
   SET_DEPLOYMENT,
   SET_DEPLOYMENT_LOGS,
   ADD_DEPLOYMENT,
+  SET_LOADING,
+  END_LOADING,
 } from './actions';
 
 export const initialState = {
@@ -29,6 +31,7 @@ export const initialState = {
     // logs
   },
   deploymentLogs: [],
+  isLoading: false,
 };
 
 const projectReducer = (state = initialState, action) => {
@@ -105,6 +108,20 @@ const projectReducer = (state = initialState, action) => {
       return {
         ...state,
         deploymentLogs: action.payload,
+      };
+
+    case SET_LOADING:
+      console.log('setting loading true')
+      return {
+        ...state,
+        isLoading: true,
+      };
+
+    case END_LOADING:
+      console.log('setting loading false')
+      return {
+        ...state,
+        isLoading: false,
       };
 
     default:

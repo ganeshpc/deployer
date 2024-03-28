@@ -1,10 +1,11 @@
-import { LOGIN, LOGOUT, SIGNUP } from './actions';
+import { END_LOADING, LOGIN, LOGOUT, SET_LOADING, SIGNUP } from './actions';
 
 // initial state
 export const initialState = {
   isLoggedIn: false,
   isInitialized: false,
   user: null,
+  isLoading: false,
 };
 
 const auth = (state = initialState, action) => {
@@ -30,6 +31,18 @@ const auth = (state = initialState, action) => {
         ...state,
         isLoggedIn: false,
         user: action.payload,
+      };
+    
+    case SET_LOADING:
+      return {
+        ...state,
+        isLoading: true,
+      };  
+    
+    case END_LOADING:
+      return {
+        ...state,
+        isLoading: false,
       };
 
     default:

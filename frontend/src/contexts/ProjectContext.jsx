@@ -7,6 +7,8 @@ import {
   ADD_PROJECT,
   SET_DEPLOYMENT_LOGS,
   ADD_DEPLOYMENT,
+  SET_LOADING,
+  END_LOADING,
 } from './project-reducer/actions';
 import projectReducer, { initialState } from './project-reducer/reducer';
 
@@ -22,28 +24,33 @@ export const ProjectProvider = ({ children }) => {
   }, []);
 
   const getProjects = async () => {
+    console.log('getting project');
+    dispatch({ type: SET_LOADING });
+
     const projects = await projectService.getProjects();
-
-    // If the request is successful, dispatch the projects array to the reducer
-
     dispatch({ type: SET_PROJECTS, payload: projects });
 
-    // If the request is unsuccessful, dispatch an error message to the reducer
+    dispatch({ type: END_LOADING });
   };
 
   const getProject = async (projectId) => {
-    const project = await projectService.getProject(projectId);
+    dispatch({ type: SET_LOADING });
 
+    const project = await projectService.getProject(projectId);
     dispatch({ type: ADD_PROJECT, payload: project });
+
+    dispatch({ type: END_LOADING });
 
     return project;
   };
 
   const createProject = async (project) => {
-    const createdProject = await projectService.createProject(project);
+    dispatch({ type: SET_LOADING });
 
-    // If the request is unsuccessful, dispatch an error message to the reducer
+    const createdProject = await projectService.createProject(project);
     dispatch({ type: CREATE_PROJECT, payload: createdProject });
+
+    dispatch({ type: END_LOADING });
   };
 
   const updateProject = (project) => {
@@ -59,18 +66,23 @@ export const ProjectProvider = ({ children }) => {
   };
 
   const getDeployments = async (projectId) => {
-    const deployments = await projectService.getDeployments(projectId);
+    dispatch({ type: SET_LOADING });
 
+    const deployments = await projectService.getDeployments(projectId);
     dispatch({ type: SET_DEPLOYMENTS, payload: { projectId, deployments } });
+
+    dispatch({ type: END_LOADING });
 
     return deployments;
   };
 
   const getDeployment = async (deploymentId) => {
-    // Make a GET request to the server
-    const deployment = await projectService.getDeployment(deploymentId);
+    dispatch({ type: SET_LOADING });
 
+    const deployment = await projectService.getDeployment(deploymentId);
     dispatch({ type: SET_DEPLOYMENTS, payload: deployment });
+
+    dispatch({ type: END_LOADING });
 
     return deployment;
   };
@@ -84,12 +96,12 @@ export const ProjectProvider = ({ children }) => {
   };
 
   const deployProject = async (projectId) => {
-    // Make a POST request to the server
-    const deployment = await projectService.deployProject(projectId);
+    dispatch({ type: SET_LOADING });
 
+    const deployment = await projectService.deployProject(projectId);
     dispatch({ type: ADD_DEPLOYMENT, payload: { projectId, deployment } });
 
-    // If the request is unsuccessful, dispatch an error message to the reducer
+    dispatch({ type: END_LOADING });
   };
 
   return (

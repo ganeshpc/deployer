@@ -45,6 +45,8 @@ export const JWTProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
+    dispatch({ type: authActions.SET_LOADING });
+
     const user = await userService.login(email, password);
 
     const authToken = user.authToken;
@@ -54,6 +56,8 @@ export const JWTProvider = ({ children }) => {
     delete user.authToken;
 
     dispatch({ type: authActions.LOGIN, payload: user });
+
+    dispatch({ type: authActions.END_LOADING });
   };
 
   const logout = () => {
@@ -65,8 +69,10 @@ export const JWTProvider = ({ children }) => {
   };
 
   const signUp = async (user) => {
+    dispatch({ type: authActions.SET_LOADING });
     const createdUser = await userService.signUp(user);
 
+    dispatch({ type: authActions.END_LOADING });
     return createdUser;
   };
 

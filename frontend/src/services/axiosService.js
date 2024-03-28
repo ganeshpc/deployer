@@ -17,7 +17,18 @@ axiosService.interceptors.request.use(
   }
 );
 
-// TODO: Add a response interceptor to handle errors
-// axiosService.interceptors.response.use()
+axiosService.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (
+      error?.response?.status === 401 &&
+      !window.location.href.includes('/login')
+    ) {
+      localStorage.removeItem('authToken');
+      window.location = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default axiosService;

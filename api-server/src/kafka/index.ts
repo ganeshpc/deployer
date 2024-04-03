@@ -5,7 +5,7 @@ import logger from '../logger/winston.config';
 
 import { Kafka } from 'kafkajs';
 
-import { saveLogToDatabase } from '../services/deployment';
+import { saveLogs } from '../services/deployment';
 
 import * as projectService from '../services/project';
 
@@ -13,6 +13,10 @@ const broker = process.env.KAFKA_BROKER as string;
 const username = process.env.KAFKA_USERNAME as string;
 const password = process.env.KAFKA_PASSWORD as string;
 const certificate = process.env.KAFKA_CERTIIATE as string;
+
+const logTopic = process.env.APP_KAFKA_LOG_TOPIC as string;
+const deploymentStatusTopic = process.env
+  .APP_KAFKA_DEPLOYMENT_STATUS_TOPIC as string;
 
 const kafka = new Kafka({
   clientId: 'api-server',
@@ -37,10 +41,10 @@ const deploymentStatusConsumer = kafka.consumer({
 
 export const initKafka = async () => {
   await logConsumer.connect();
-  await logConsumer.subscribe({ topics: ['container-logs'] });
+  await logConsumer.subscribe({ topics: [logTopic] });
 
   await deploymentStatusConsumer.connect();
-  await deploymentStatusConsumer.subscribe({ topics: ['deployment_status'] });
+  await deploymentStatusConsumer.subscribe({ topics: [deploymentStatusTopic] });
 
   await logConsumer.run({
     eachBatch: async ({ batch, resolveOffset, heartbeat }) => {
@@ -52,7 +56,7 @@ export const initKafka = async () => {
         if (stringMessage !== undefined) {
           const { PROJECT_ID, DEPLOYMENT_ID, log } = JSON.parse(stringMessage);
 
-          saveLogToDatabase(PROJECT_ID, DEPLOYMENT_ID, log);
+          saveLogs(PROJECT_ID, DEPLOYMENT_ID, log);
 
           resolveOffset(message.offset);
           await heartbeat();

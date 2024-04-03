@@ -1,9 +1,8 @@
-import { v4 as uuid } from 'uuid';
-
 import logger from '../../logger/winston.config';
-import clickHouseClient from '../../clickhouse';
 
-export const saveLogToDatabase = async (
+import clickhouseLogRepo from '../../repositories/ClickhouseLogRepo';
+
+export const saveLogs = async (
   projectId: String,
   deploymentId: String,
   logMessage: String
@@ -12,18 +11,7 @@ export const saveLogToDatabase = async (
     `saving log to database: projectId: ${projectId}, deploymentId: ${deploymentId} logMessage: ${logMessage}`
   );
   try {
-    clickHouseClient.insert({
-      table: 'log_events',
-      values: [
-        {
-          event_id: uuid(),
-          project_id: projectId,
-          deployment_id: deploymentId,
-          log: logMessage,
-        },
-      ],
-      format: 'JSONEachRow',
-    });
+    clickhouseLogRepo.saveLogToDatabase(projectId, deploymentId, logMessage);
   } catch (error) {
     logger.error(
       `error saving log to database. projectId: ${projectId}, logMessage: ${logMessage}`,

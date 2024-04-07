@@ -15,11 +15,23 @@ const deploymentStatusChannelName = process.env
 
 export const initRedis = () => {
   return new Promise<void>((resolve, reject) => {
+    logger.info(
+      `Connecting to redis... with host: ${host}, port: ${port}, username: ${username}`
+    );
     const redis = new Redis({
       host,
       port,
       username,
       password,
+    });
+
+    redis.on('connect', () => {
+      logger.info('Connection to redis susccessful');
+    });
+
+    redis.on('error', (err) => {
+      logger.error('Failed to connect to redis: ', err);
+      reject(err);
     });
 
     redis.subscribe(

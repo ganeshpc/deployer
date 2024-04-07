@@ -22,6 +22,8 @@ COPY ca-certificate.crt ca-certificate.crt
 
 COPY main.sh main.sh
 
+COPY message-queue message-queue
+
 COPY script.js script.js
 
 COPY .env .env

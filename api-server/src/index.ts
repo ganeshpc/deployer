@@ -3,14 +3,15 @@ dotenv.config();
 
 import logger from './logger/winston.config';
 import app from './app';
-import { initKafka } from './kafka';
+import { initRedis } from './redis';
 
 const PORT = process.env.PORT ?? 9000;
 
 const main = async () => {
   try {
     logger.info('starting api-server...');
-    await initKafka();
+
+    await initRedis();
 
     app.listen(PORT, () => {
       logger.info(`api server listening on port: ${PORT}`);

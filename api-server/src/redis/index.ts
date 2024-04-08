@@ -23,6 +23,7 @@ export const initRedis = () => {
       port,
       username,
       password,
+      tls: { rejectUnauthorized: false },
     });
 
     redis.on('connect', () => {

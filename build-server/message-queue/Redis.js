@@ -2,10 +2,10 @@ const { Redis } = require('ioredis');
 
 const MessageQueue = require('./MessageQueue');
 
-const host = 'redis-1e9a5741-vercel-clone-proj.a.aivencloud.com';
-const port = 18238;
-const username = 'default';
-const password = 'AVNS_WGvAmK0zHF-EdxNZUXj';
+const host = process.env.REDIS_HOST;
+const port = process.env.REDIS_PORT;
+const username = process.env.REDIS_USERNAME;
+const password = process.env.REDIS_PASSWORD;
 
 const REDIS_LOG_CHANNEL = process.env.REDIS_LOG_CHANNEL;
 const REDIS_DEPLOYMENT_STATUS_CHANNEL =
@@ -19,6 +19,9 @@ class RedisMQ extends MessageQueue {
       port,
       username,
       password,
+      tls: {
+        rejectUnauthorized: false,
+      },
     });
   }
 

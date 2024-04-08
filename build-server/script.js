@@ -98,8 +98,6 @@ async function init() {
 
     publishDeploymentStatus('COMPLETED');
 
-    await proudcer.disconnect();
-
     process.exit(0);
   });
 }

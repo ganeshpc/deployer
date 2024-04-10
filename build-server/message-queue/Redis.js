@@ -25,20 +25,38 @@ class RedisMQ extends MessageQueue {
     });
   }
 
+  initializeConnection() {
+    return new Promise((resolve, reject) => {
+      this.redis.on('connect', () => {
+        console.log('Connection to redis successful');
+        resolve();
+      });
+
+      this.redis.on('error', (error) => {
+        console.error('Error connecting to redis', error);
+        reject(error);
+      });
+    });
+  }
+
   publishLog(message) {
     if (typeof message !== 'string') {
       message = JSON.stringify(message);
     }
 
+    console.log('publishing log', message);
+
     this.redis.publish(REDIS_LOG_CHANNEL, message);
   }
 
-  publishDeploymentStatus(message) {
+  async publishDeploymentStatus(message) {
     if (typeof message !== 'string') {
       message = JSON.stringify(message);
     }
 
-    this.redis.publish(REDIS_DEPLOYMENT_STATUS_CHANNEL, message);
+    console.log('publishing deployment status', message);
+
+    await this.redis.publish(REDIS_DEPLOYMENT_STATUS_CHANNEL, message);
   }
 }
 

@@ -15,6 +15,7 @@ const DEPLOYMENT_ID = process.env.DEPLOYMENT_ID;
 const AWS_REGION = process.env.AWS_REGION;
 const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
 const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
+const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
 
 const s3Client = new S3Client({
   region: AWS_REGION,
@@ -41,6 +42,8 @@ const publishLog = async (log) => {
 };
 
 async function init() {
+  await redis.initializeConnection();
+
   publishDeploymentStatus('IN_PROGRESS');
 
   console.log('Executing script.js');
@@ -81,7 +84,7 @@ async function init() {
       publishLog(`uploading ${filePath}`);
 
       const command = new PutObjectCommand({
-        Bucket: 'vercel-bucket-output',
+        Bucket: AWS_S3_BUCKET_NAME,
         Key: `__output/${PROJECT_ID}/${file}`,
         Body: fs.createReadStream(filePath),
         ContentType: mime.lookup(filePath),
@@ -96,9 +99,9 @@ async function init() {
     console.log('done...');
     publishLog('files uploaded...');
 
-    publishDeploymentStatus('COMPLETED');
+    await publishDeploymentStatus('COMPLETED');
 
-    process.exit(0);
+    // process.exit(0);
   });
 }
 

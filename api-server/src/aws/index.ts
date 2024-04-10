@@ -19,7 +19,6 @@ export const buildProject = async (
   gitRepoUrl: string,
   deploymentId: string
 ) => {
-
   logger.info(`Building project ${projectId}`);
 
   const command = new RunTaskCommand({
@@ -37,7 +36,7 @@ export const buildProject = async (
     overrides: {
       containerOverrides: [
         {
-          name: 'builder-image-in-task-container',
+          name: process.env.AWS_TASK_CONTAINER_NAME,
           environment: [
             {
               name: 'PROJECT_ID',

@@ -12,7 +12,7 @@
 Responsibilities:
 * **User management**: Registration, login, and authentication.
 * **Project management**: CRUD operations for user projects.
-Deployment handling: Initiating and tracking deployment processes.
+* **Deployment handling**: Initiating and tracking deployment processes.
 
 ### Build Server:
 
